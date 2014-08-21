@@ -9,14 +9,15 @@
 
   <name>${project.groupId}:${project.artifactId}</name>
   <description>JUnit extension to aid out-of-server automated JPA testing</description>
-  <url>[link ghub]</url>
+  <url>https://github.com/daniel-a-melo/jorm-unit</url>
   
   <developers>
     <developer>
+      <id>daniel-a-melo</id>
       <name>Daniel Melo</name>
       <email>daniel@dmelo.net</email>
-      <organization>??</organization>
-      <organizationUrl>[link ghub]</organizationUrl>
+      <organization>Daniel Melo</organization>
+      <organizationUrl>https://github.com/daniel-a-melo</organizationUrl>
     </developer>
   </developers>
   
@@ -28,9 +29,9 @@
   </licenses>
   
   <scm>
-    <connection>scm:git:git@github.com:example/example-application.git</connection>
-    <developerConnection>scm:git:git@github.com:example/example-application.git</developerConnection>
-    <url>git@github.com:example/example-application.git</url>
+    <connection>scm:git:git@github.com:daniel-a-melo/jorm-unit.git</connection>
+    <developerConnection>scm:git:git@github.com:daniel-a-melo/jorm-unit.git</developerConnection>
+    <url>git@github.com:daniel-a-melo/jorm-unit.git</url>
   </scm>
 
   <properties>

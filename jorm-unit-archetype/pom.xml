@@ -9,14 +9,15 @@
 
   <name>${project.groupId}:${project.artifactId}</name>
   <description>Archetype that creates a sample project with jorm-unit sample test</description>
-  <url>[link ghub]</url>
+  <url>https://github.com/daniel-a-melo/jorm-unit</url>
   
   <developers>
     <developer>
+      <id>daniel-a-melo</id>
       <name>Daniel Melo</name>
       <email>daniel@dmelo.net</email>
-      <organization>??</organization>
-      <organizationUrl>[link ghub]</organizationUrl>
+      <organization>Daniel Melo</organization>
+      <organizationUrl>https://github.com/daniel-a-melo</organizationUrl>
     </developer>
   </developers>
   
