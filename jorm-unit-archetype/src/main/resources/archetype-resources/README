@@ -1,0 +1,24 @@
+   _                                  _      
+  (_)                                (_)_    
+   _  ___   ____ ____ ___ _   _ ____  _| |_  
+  | |/ _ \ / ___)    (___) | | |  _ \| |  _) 
+  | | |_| | |   | | | |  | |_| | | | | | |__ 
+ _| |\___/|_|   |_|_|_|   \____|_| |_|_|\___)
+(__/                                         
+
+Sample application
+
+JPA API and Hibernate/EclipseLink versions as of Aug 2014
+┌───┬───────────────────────┬───────────┬────────────────────────────────────┬───────────────────────┐
+│JPA│API artifacts          │JEE version│Hibernate artifact                  │EclipseLink artifact   │
+├───┼───────────────────────┼───────────┼────────────────────────────────────┼───────────────────────┤
+│   │org.ow2.spec.ee        │           │org.hibernate:                      │org.eclipse.persistence│
+│2.0│ow2-jpa-2.0-spec:2.0.0 │     6     │hibernate-entitymanager:4.2.15.Final│eclipselink:2.4.2      │
+│   │                       │           │                                    │                       │
+├───┼───────────────────────┼───────────┼────────────────────────────────────┼───────────────────────┤
+│2.1│org.eclipse.persistence│           │org.hibernate:                      │org.eclipse.persistence│
+│   │javax.persistence:2.1.0│     7     │hibernate-entitymanager:4.3.6.Final │eclipselink:2.5.2      │
+└───┴───────────────────────┴───────────┴────────────────────────────────────┴───────────────────────┘
+
+
+

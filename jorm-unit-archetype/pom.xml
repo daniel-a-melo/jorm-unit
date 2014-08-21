@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.jorm-unit</groupId>
+  <artifactId>jorm-unit-sample-archetype</artifactId>
+  <version>1.0.0</version>
+  <packaging>maven-archetype</packaging>
+
+  <name>${project.groupId}:${project.artifactId}</name>
+  <description>Archetype that creates a sample project with jorm-unit sample test</description>
+  <url>[link ghub]</url>
+  
+  <developers>
+    <developer>
+      <name>Daniel Melo</name>
+      <email>daniel@dmelo.net</email>
+      <organization>??</organization>
+      <organizationUrl>[link ghub]</organizationUrl>
+    </developer>
+  </developers>
+  
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>http://opensource.org/licenses/MIT</url>
+    </license>
+  </licenses>
+  
+  <scm>
+    <connection>scm:git:git@github.com:example/example-application.git</connection>
+    <developerConnection>scm:git:git@github.com:example/example-application.git</developerConnection>
+    <url>git@github.com:example/example-application.git</url>
+  </scm>
+
+  <build>
+    
+    <plugins>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>2.3</version>
+          <executions>
+           <execution>
+             <id>attach-sources</id>
+             <goals>
+                <goal>jar</goal>
+             </goals>
+           </execution>
+          </executions>
+      </plugin>
+      
+       <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <executions>
+                <execution>
+                    <id>empty-javadoc-jar</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>jar</goal>
+                    </goals>
+                    <configuration>
+                        <classifier>javadoc</classifier>
+                        <classesDirectory>${basedir}/javadoc</classesDirectory>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+      
+    </plugins>
+
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.archetype</groupId>
+        <artifactId>archetype-packaging</artifactId>
+        <version>2.2</version>
+      </extension>
+    </extensions>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-archetype-plugin</artifactId>
+          <version>2.2</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  
+</project>

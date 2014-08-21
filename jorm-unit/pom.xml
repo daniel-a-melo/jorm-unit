@@ -1,0 +1,131 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.jorm-unit</groupId>
+  <artifactId>jorm-unit</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+
+  <name>${project.groupId}:${project.artifactId}</name>
+  <description>JUnit extension to aid out-of-server automated JPA testing</description>
+  <url>[link ghub]</url>
+  
+  <developers>
+    <developer>
+      <name>Daniel Melo</name>
+      <email>daniel@dmelo.net</email>
+      <organization>??</organization>
+      <organizationUrl>[link ghub]</organizationUrl>
+    </developer>
+  </developers>
+  
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>http://opensource.org/licenses/MIT</url>
+    </license>
+  </licenses>
+  
+  <scm>
+    <connection>scm:git:git@github.com:example/example-application.git</connection>
+    <developerConnection>scm:git:git@github.com:example/example-application.git</developerConnection>
+    <url>git@github.com:example/example-application.git</url>
+  </scm>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+      
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>2.3</version>
+          <executions>
+           <execution>
+             <id>attach-sources</id>
+             <goals>
+                <goal>jar</goal>
+             </goals>
+           </execution>
+          </executions>
+      </plugin>
+      
+      <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-javadoc-plugin</artifactId>
+         <version>2.9.1</version>
+         <executions>
+            <execution>
+               <id>attach-javadocs</id>
+               <goals>
+                 <goal>jar</goal>
+               </goals>
+           </execution>
+        </executions>
+       </plugin>
+    </plugins>
+    
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>compile</scope>
+    </dependency>
+    
+	<dependency>
+		<groupId>org.eclipse.persistence</groupId>
+		<artifactId>javax.persistence</artifactId>
+		<version>2.1.0</version>
+	</dependency>
+    
+    <dependency>
+	   <groupId>com.h2database</groupId>
+	   <artifactId>h2</artifactId>
+	   <version>1.3.175</version>
+    </dependency>
+    
+    <dependency>
+		<groupId>org.dbunit</groupId>
+		<artifactId>dbunit</artifactId>
+		<version>2.5.0</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>commons-dbutils</groupId>
+		<artifactId>commons-dbutils</artifactId>
+		<version>1.6</version>
+	</dependency>
+	
+	<dependency>
+        <groupId>dnl.utils</groupId>
+        <artifactId>j-text-utils</artifactId>
+        <version>0.3.3</version>
+	</dependency>
+    
+  </dependencies>
+  
+  <repositories>
+  	<repository> <!-- j-text-utils  -->
+       <id>d-maven</id>
+       <url>http://d-maven.googlecode.com/svn/trunk/repo</url>
+    </repository>
+  </repositories>
+  
+  
+</project>
