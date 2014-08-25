@@ -8,7 +8,7 @@
   <packaging>jar</packaging>
 
   <name>${project.groupId}:${project.artifactId}</name>
-  <description>JUnit extension to aid out-of-server automated JPA testing</description>
+  <description>JUnit extension to assist out-of-server automated JPA testing</description>
   <url>https://github.com/daniel-a-melo/jorm-unit</url>
   
   <developers>

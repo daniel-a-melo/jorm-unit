@@ -1,4 +1,4 @@
 jorm-unit
 =========
 
-JUnit extension to aid out-of-server automated JPA testing
+JUnit extension to assist out-of-server automated JPA testing
