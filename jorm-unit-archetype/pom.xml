@@ -34,6 +34,10 @@
     <url>git@github.com:example/example-application.git</url>
   </scm>
 
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  
   <build>
     
     <plugins>
@@ -54,6 +58,7 @@
        <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
+			<version>2.5</version>
             <executions>
                 <execution>
                     <id>empty-javadoc-jar</id>
