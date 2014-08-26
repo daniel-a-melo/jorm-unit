@@ -44,7 +44,7 @@ import org.junit.runners.model.Statement;
  * is not present then it will try to create a persistence unit named "default-pu".</p>
  * 
  * <p>if any test use the annotations {@link PrintDatabase}, {@link BeforeDataSet} or {@link AfterDataSet} then it might be necessary to provide
- * implementations of the interfaces {@link DatabaseInstrospector} and {@link ConnectionProviders}. These implementations are also informed 
+ * implementations of the interfaces {@link DatabaseInstrospector} and {@link DatabaseConnectionProvider}. These implementations are also informed 
  * via the class level annotation {@link TestConfiguration}.</p>
  * 
  * <p>If these implementation are not informed the defaults are {@link AnsiDatabaseInstrospector} and {@link JPAConnectionProvider} respectively.</p>
