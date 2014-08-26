@@ -45,22 +45,22 @@
 </ul><h3>
 <a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h3>
 
-<pre><code>public class SampleTest extends JPATest {
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleTest</span> <span class="kd">extends</span> <span class="n">JPATest</span> <span class="o">{</span>
 
-    @Test
-    @Transactional
-    @BeforeDataSet(fileName = "initialTestData.xml")
-    @AfterDataSet(fileName = "expectedTestData.xml")
-    @PrintDatabase
-    public void testSaveDataAutomaticTransaction() {
-        Customer cust = new Customer("Customer 2");
-        getEntityManager().persist(cust);
+    <span class="nd">@Test</span>
+    <span class="nd">@Transactional</span>
+    <span class="nd">@BeforeDataSet</span><span class="o">(</span><span class="n">fileName</span> <span class="o">=</span> <span class="s">"initialTestData.xml"</span><span class="o">)</span>
+    <span class="nd">@AfterDataSet</span><span class="o">(</span><span class="n">fileName</span> <span class="o">=</span> <span class="s">"expectedTestData.xml"</span><span class="o">)</span>
+    <span class="nd">@PrintDatabase</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testSaveDataAutomaticTransaction</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Customer</span> <span class="n">cust</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Customer</span><span class="o">(</span><span class="s">"Customer 2"</span><span class="o">);</span>
+        <span class="n">getEntityManager</span><span class="o">().</span><span class="na">persist</span><span class="o">(</span><span class="n">cust</span><span class="o">);</span>
 
-        Assert.assertNotNull(cust.getId());
-    }
+        <span class="n">Assert</span><span class="o">.</span><span class="na">assertNotNull</span><span class="o">(</span><span class="n">cust</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+    <span class="o">}</span>
 
-}
-</code></pre>
+<span class="o">}</span>
+</pre></div>
 
 <pre><code>Output:
 
@@ -120,8 +120,6 @@ Define value for property 'jpa-provider': : hibernate
         <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
  <span class="nt">&lt;/dependency&gt;</span>
 </pre></div>
-
-<p>As jorm-unit will be used with your chosen JAP implementation the JPA API dependence will be already included on your project</p>
       </section>
     </div>
 
