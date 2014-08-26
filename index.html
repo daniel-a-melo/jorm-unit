@@ -34,7 +34,7 @@
         <h2>
 <a name="iterate-fast-while-testing-debugging-and-studying-jpa-implementations" class="anchor" href="#iterate-fast-while-testing-debugging-and-studying-jpa-implementations"><span class="octicon octicon-link"></span></a>Iterate fast while testing, debugging and studying JPA implementations.</h2>
 
-<p>jorm-unit assists  out-of-server JPA (Java Persistence API) execution. </p>
+<p>jorm-unit assists running tests  out-of-server for JPA (Java Persistence API) code. The list of features is: </p>
 
 <ul>
 <li>Reuse of <code>EntityManagerFactory</code>through all tests in order to speed up execution</li>
@@ -318,6 +318,7 @@ ________________
     <span class="nd">@Transactional</span>
     <span class="nd">@BeforeDataSet</span><span class="o">(</span><span class="n">fileName</span> <span class="o">=</span> <span class="s">"testdata.xml"</span><span class="o">)</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testFetchCustomer</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">printDatabase</span><span class="o">();</span>
         <span class="n">Customer</span> <span class="n">cust</span> <span class="o">=</span> <span class="n">getEntityManager</span><span class="o">().</span><span class="na">find</span><span class="o">(</span><span class="n">Customer</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Long</span><span class="o">(-</span><span class="mi">1</span><span class="o">));</span>
         <span class="n">Assert</span><span class="o">.</span><span class="na">assertNotNull</span><span class="o">(</span><span class="n">cust</span><span class="o">);</span>
         <span class="n">Assert</span><span class="o">.</span><span class="na">assertEquals</span><span class="o">(</span><span class="s">"Customer 1"</span><span class="o">,</span> <span class="n">cust</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
