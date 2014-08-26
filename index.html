@@ -32,7 +32,7 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h2>
-<a name="iterate-fast-while-testing-debugging-studying-jpa-implementations" class="anchor" href="#iterate-fast-while-testing-debugging-studying-jpa-implementations"><span class="octicon octicon-link"></span></a>Iterate fast while testing, debugging, studying JPA implementations.</h2>
+<a name="iterate-fast-while-testing-debugging-and-studying-jpa-implementations" class="anchor" href="#iterate-fast-while-testing-debugging-and-studying-jpa-implementations"><span class="octicon octicon-link"></span></a>Iterate fast while testing, debugging and studying JPA implementations.</h2>
 
 <p>jorm-unit assists  out-of-server JPA (Java Persistence API) execution. </p>
 
@@ -119,6 +119,267 @@ Define value for property 'jpa-provider': : hibernate
         <span class="nt">&lt;/exclusions&gt;</span>
         <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
  <span class="nt">&lt;/dependency&gt;</span>
+</pre></div>
+
+<h2>
+<a name="going-forward" class="anchor" href="#going-forward"><span class="octicon octicon-link"></span></a>Going forward</h2>
+
+<h5>
+<a name="settting-up-persistence-unit" class="anchor" href="#settting-up-persistence-unit"><span class="octicon octicon-link"></span></a>Settting up persistence unit</h5>
+
+<p>By default jorm-unit will try to use a persistence unit named <code>default-pu</code>. To specify one persistence unit annotate your test class with <code>TestConfiguration</code></p>
+
+<div class="highlight highlight-java"><pre><span class="nd">@TestConfiguration</span><span class="o">(</span><span class="n">persistenceUnitName</span><span class="o">=</span><span class="s">"simple-pu"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleTest</span> <span class="kd">extends</span> <span class="n">JPATest</span>
+</pre></div>
+
+<h5>
+<a name="setting-up-tests-for-hibernate" class="anchor" href="#setting-up-tests-for-hibernate"><span class="octicon octicon-link"></span></a>Setting up tests for Hibernate</h5>
+
+<p>if you make use of <code>AfterDataSet</code>, <code>BeforeDataSet</code> or print database state features jorm-unit needs direct access to your database. Since JPA 2.0 providers give acess to the wrapped JDBC connection with the method <code>EntityManager.unwrap</code>. </p>
+
+<p>Apparently this method does not work with Hibernate running without JTA transactions. For this scenario your test class must provide the current JDBC connection. It can be achieved in two ways. </p>
+
+<p>a) Overriding the method  <code>getCurrentDatabaseConnection</code></p>
+
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleTest</span> <span class="kd">extends</span> <span class="n">JPATest</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="n">Connection</span> <span class="nf">getCurrentDatabaseConnection</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="o">((</span><span class="n">SessionImpl</span><span class="o">)</span> <span class="n">getEntityManager</span><span class="o">().</span><span class="na">getDelegate</span><span class="o">()).</span><span class="na">connection</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<p>b) Implementing the interface <code>DatabaseConnectionProvider</code></p>
+
+<div class="highlight highlight-java"><pre><span class="nd">@TestConfiguration</span><span class="o">(</span><span class="n">persistenceUnitName</span><span class="o">=</span><span class="s">"simple-pu"</span><span class="o">,</span> <span class="n">connectionProvider</span><span class="o">=</span><span class="n">ORMTest</span><span class="o">.</span><span class="na">HibernateConnectionProvider</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleTest</span> <span class="kd">extends</span> <span class="n">JPATest</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">HibernateConnectionProvider</span> <span class="kd">implements</span> <span class="n">DatabaseConnectionProvider</span> <span class="o">{</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="n">Connection</span> <span class="nf">getCurrentConnection</span><span class="o">(</span><span class="n">EntityManager</span> <span class="n">em</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="o">((</span><span class="n">SessionImpl</span><span class="o">)</span> <span class="n">em</span><span class="o">.</span><span class="na">getDelegate</span><span class="o">()).</span><span class="na">connection</span><span class="o">();</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<blockquote>
+<p><strong>Note</strong>:  Providing the current JDBC connection is not necessary if you are using other JPA implementation such as EclipseLink or is not using DBUnit's XML datasets and database state printing features</p>
+</blockquote>
+
+<h5>
+<a name="choosing-the-transaction-management-strategy" class="anchor" href="#choosing-the-transaction-management-strategy"><span class="octicon octicon-link"></span></a>Choosing the transaction management strategy</h5>
+
+<p>You may annotate your test methods with <code>Transactional</code>and jorm-unit will open a transaction before each test and complete it after the test ends. If the test finished without exceptions the transaction is committed otherwise it is rolled back.</p>
+
+<p>It is also possible to demarcate transaction boundaries manually using the current <code>EntityManager</code></p>
+
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleTest</span> <span class="kd">extends</span> <span class="n">JPATest</span> <span class="o">{</span>
+
+    <span class="nd">@Test</span>
+    <span class="nd">@Transactional</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testSaveDataAutomaticTransaction</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Customer</span> <span class="n">cust</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Customer</span><span class="o">(</span><span class="s">"Customer 2"</span><span class="o">);</span>
+        <span class="n">getEntityManager</span><span class="o">().</span><span class="na">persist</span><span class="o">(</span><span class="n">cust</span><span class="o">);</span>
+
+        <span class="n">Assert</span><span class="o">.</span><span class="na">assertNotNull</span><span class="o">(</span><span class="n">cust</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testSaveDataNonAutomaticTransaction</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Customer</span> <span class="n">cust</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Customer</span><span class="o">(</span><span class="s">"Customer 2"</span><span class="o">);</span>
+
+            <span class="k">try</span> <span class="o">{</span>
+            <span class="n">getEntityManager</span><span class="o">().</span><span class="na">beginTransaction</span><span class="o">();</span>
+            <span class="n">getEntityManager</span><span class="o">().</span><span class="na">persist</span><span class="o">(</span><span class="n">cust</span><span class="o">);</span>
+            <span class="n">getEntityManager</span><span class="o">().</span><span class="na">commitTransaction</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">getEntityManager</span><span class="o">().</span><span class="na">rollbackTransaction</span><span class="o">();</span>
+            <span class="k">throw</span> <span class="n">e</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="n">Assert</span><span class="o">.</span><span class="na">assertNotNull</span><span class="o">(</span><span class="n">cust</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h5>
+<a name="printing-the-database-state" class="anchor" href="#printing-the-database-state"><span class="octicon octicon-link"></span></a>Printing the database state</h5>
+
+<p>The rows of every table in the database can be printed to console by the end of every test using the annotation <code>PrintDatabase</code></p>
+
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleTest</span> <span class="kd">extends</span> <span class="n">JPATest</span> <span class="o">{</span>
+
+    <span class="nd">@Test</span>
+    <span class="nd">@Transactional</span>
+    <span class="nd">@PrintDatabase</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testSaveDataAutomaticTransaction</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Customer</span> <span class="n">cust</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Customer</span><span class="o">(</span><span class="s">"Customer 2"</span><span class="o">);</span>
+        <span class="n">getEntityManager</span><span class="o">().</span><span class="na">persist</span><span class="o">(</span><span class="n">cust</span><span class="o">);</span>
+
+        <span class="n">Assert</span><span class="o">.</span><span class="na">assertNotNull</span><span class="o">(</span><span class="n">cust</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<p>Output:</p>
+
+<pre><code>CUSTOMER [2 rows]
+________________
+| ID| NAME      |
+|===============|
+| 1 | Customer 2|
+</code></pre>
+
+<p>It is possible to print the database state at any moment of the test by invoking the method <code>printDatabase</code></p>
+
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleTest</span> <span class="kd">extends</span> <span class="n">JPATest</span> <span class="o">{</span>
+
+    <span class="nd">@Test</span>
+    <span class="nd">@Transactional</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testSaveDataAutomaticTransaction</span><span class="o">()</span> <span class="o">{</span>
+
+        <span class="n">printDatabase</span><span class="o">();</span>
+        <span class="n">Customer</span> <span class="n">cust</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Customer</span><span class="o">(</span><span class="s">"Customer 2"</span><span class="o">);</span>
+        <span class="n">getEntityManager</span><span class="o">().</span><span class="na">persist</span><span class="o">(</span><span class="n">cust</span><span class="o">);</span>
+
+        <span class="n">Assert</span><span class="o">.</span><span class="na">assertNotNull</span><span class="o">(</span><span class="n">cust</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<p>Output:</p>
+
+<pre><code>CUSTOMER is empty
+</code></pre>
+
+<p>jorm-unit will introspect the database using the following ANSI SQL query</p>
+
+<div class="highlight highlight-sql"><pre><span class="k">SELECT</span> <span class="k">TABLE_NAME</span> <span class="k">FROM</span> <span class="n">INFORMATION_SCHEMA</span><span class="p">.</span><span class="n">TABLES</span> <span class="k">WHERE</span> <span class="n">TABLE_TYPE</span> <span class="o">=</span> <span class="s1">'TABLE'</span>
+</pre></div>
+
+<p>In case your DBMS does not support INFORMATION_SCHEMA view (such as <em>Oracle</em>) you must implement the interface <code>DatabaseInstrospector</code></p>
+
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">OracleDatabaseInstrospector</span> <span class="kd">implements</span> <span class="n">DatabaseInstrospector</span> <span class="o">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getAllTablesSqlQuery</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="s">"SELECT table_name FROM user_tables"</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+
+<span class="nd">@TestConfiguration</span><span class="o">(</span><span class="n">persistenceUnitName</span><span class="o">=</span><span class="s">"simple-pu"</span><span class="o">,</span> <span class="n">databaseInstrospector</span><span class="o">=</span><span class="n">OracleDatabaseInstrospector</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleTest</span> <span class="kd">extends</span> <span class="n">JPATest</span> <span class="o">{</span>
+
+    <span class="nd">@Test</span>
+    <span class="nd">@Transactional</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testSaveDataAutomaticTransaction</span><span class="o">()</span> <span class="o">{</span>
+
+        <span class="n">printDatabase</span><span class="o">();</span>
+        <span class="n">Customer</span> <span class="n">cust</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Customer</span><span class="o">(</span><span class="s">"Customer 2"</span><span class="o">);</span>
+        <span class="n">getEntityManager</span><span class="o">().</span><span class="na">persist</span><span class="o">(</span><span class="n">cust</span><span class="o">);</span>
+
+        <span class="n">Assert</span><span class="o">.</span><span class="na">assertNotNull</span><span class="o">(</span><span class="n">cust</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</pre></div>
+
+<h5>
+<a name="loading-test-data" class="anchor" href="#loading-test-data"><span class="octicon octicon-link"></span></a>Loading test data</h5>
+
+<p>To run tests against a well known data set it is possible to load a <a href="http://dbunit.sourceforge.net/apidocs/org/dbunit/dataset/xml/FlatXmlDataSet.html">DBUnit flat XML data set</a> prior to each test execution</p>
+
+<p><em>testdata.xml</em></p>
+
+<div class="highlight highlight-xml"><pre><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;dataset&gt;</span>
+    <span class="nt">&lt;customer</span> <span class="na">id=</span><span class="s">"-1"</span> <span class="na">name=</span><span class="s">"Customer 1"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;orderoption</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;salesorder</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;orderitem</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;order_option_selection</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/dataset&gt;</span>
+</pre></div>
+
+<p><em>testdata.xml</em> must be in the class path, for example at <code>src/test/resources</code> if default Maven project layout is adopted. </p>
+
+<blockquote>
+<p><strong>Important</strong> : The tag names and attributes refer to actual database tables and columns and not Java classes and attributes</p>
+</blockquote>
+
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleTest</span> <span class="kd">extends</span> <span class="n">JPATest</span> <span class="o">{</span>
+
+    <span class="nd">@Test</span>
+    <span class="nd">@Transactional</span>
+    <span class="nd">@BeforeDataSet</span><span class="o">(</span><span class="n">fileName</span> <span class="o">=</span> <span class="s">"testdata.xml"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testFetchCustomer</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Customer</span> <span class="n">cust</span> <span class="o">=</span> <span class="n">getEntityManager</span><span class="o">().</span><span class="na">find</span><span class="o">(</span><span class="n">Customer</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Long</span><span class="o">(-</span><span class="mi">1</span><span class="o">));</span>
+        <span class="n">Assert</span><span class="o">.</span><span class="na">assertNotNull</span><span class="o">(</span><span class="n">cust</span><span class="o">);</span>
+        <span class="n">Assert</span><span class="o">.</span><span class="na">assertEquals</span><span class="o">(</span><span class="s">"Customer 1"</span><span class="o">,</span> <span class="n">cust</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<p>Output:</p>
+
+<pre><code>CUSTOMER [2 rows]
+________________
+| ID| NAME      |
+|===============|
+| -1 |Customer 1|
+</code></pre>
+
+<p>jorm-unit will initially delete all rows of all tables mentioned in the XML file and then insert the records listed in the order it appears in the file</p>
+
+<h5>
+<a name="comparing-database-state-to-xml-datasets" class="anchor" href="#comparing-database-state-to-xml-datasets"><span class="octicon octicon-link"></span></a>Comparing database state to XML datasets</h5>
+
+<p>After the execution of each test it is possible to compare the database state with a <a href="http://dbunit.sourceforge.net/apidocs/org/dbunit/dataset/xml/FlatXmlDataSet.html">DBUnit flat XML data set</a>. </p>
+
+<p><em>expectedData.xml</em></p>
+
+<div class="highlight highlight-xml"><pre><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;dataset&gt;</span>
+    <span class="nt">&lt;customer</span> <span class="na">name=</span><span class="s">"Customer 2"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;orderoption</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;salesorder</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;orderitem</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;order_option_selection</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/dataset&gt;</span>
+</pre></div>
+
+<p><em>expectedData.xml</em> must be in the class path, for example at <code>src/test/resources</code> if default Maven  project layout is adopted.</p>
+
+<blockquote>
+<p><strong>Important</strong> : The tag names and attributes refer to actual database tables and columns and not Java classes and attributes</p>
+</blockquote>
+
+<div class="highlight highlight-java"><pre><span class="nd">@Test</span>
+<span class="nd">@Transactional</span>
+<span class="nd">@AfterDataSet</span><span class="o">(</span><span class="n">fileName</span> <span class="o">=</span> <span class="s">"expectedData.xml"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">testSaveCustomer</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+    <span class="n">Customer</span> <span class="n">cust</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Customer</span><span class="o">(</span><span class="s">"Customer 2"</span><span class="o">);</span>
+    <span class="n">getEntityManager</span><span class="o">().</span><span class="na">persist</span><span class="o">(</span><span class="n">cust</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+<p>After the test execution it will be asserted that the table <code>CUSTOMER</code> has one row as listed and all other tables mentioned on the XML file with empty tags  have no rows.</p>
+
+<blockquote>
+<p><strong>Important</strong>: When composing data sets with expected data don't include columns with system generated values such as identity columns, sequence obtained values, time stamps and similar.</p>
+</blockquote>
+
+<p>NULL values can be referred on XML datasets using the constant <code>[NULL]</code></p>
+
+<div class="highlight highlight-xml"><pre><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;dataset&gt;</span>
+    <span class="nt">&lt;customer</span> <span class="na">name=</span><span class="s">"Customer 2"</span>  <span class="na">description=</span><span class="s">"[NULL]"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/dataset&gt;</span>
 </pre></div>
       </section>
     </div>
