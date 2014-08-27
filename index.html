@@ -152,7 +152,7 @@ Define value for property 'jpa-provider': : hibernate
 
 <p>b) Implementing the interface <code>DatabaseConnectionProvider</code></p>
 
-<div class="highlight highlight-java"><pre><span class="nd">@TestConfiguration</span><span class="o">(</span><span class="n">persistenceUnitName</span><span class="o">=</span><span class="s">"simple-pu"</span><span class="o">,</span> <span class="n">connectionProvider</span><span class="o">=</span><span class="n">ORMTest</span><span class="o">.</span><span class="na">HibernateConnectionProvider</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<div class="highlight highlight-java"><pre><span class="nd">@TestConfiguration</span><span class="o">(</span><span class="n">persistenceUnitName</span><span class="o">=</span><span class="s">"simple-pu"</span><span class="o">,</span> <span class="n">connectionProvider</span><span class="o">=</span><span class="n">SampleTest</span><span class="o">.</span><span class="na">HibernateConnectionProvider</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleTest</span> <span class="kd">extends</span> <span class="n">JPATest</span> <span class="o">{</span>
 
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">HibernateConnectionProvider</span> <span class="kd">implements</span> <span class="n">DatabaseConnectionProvider</span> <span class="o">{</span>
