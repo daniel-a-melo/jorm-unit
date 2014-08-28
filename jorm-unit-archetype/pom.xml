@@ -9,7 +9,7 @@
 
   <name>${project.groupId}:${project.artifactId}</name>
   <description>Archetype that creates a sample project with jorm-unit sample test</description>
-  <url>http://daniel-a-melo.github.io/jorm-unit</url>
+  <url>http://www.jorm-unit.org</url>
   
   <developers>
     <developer>

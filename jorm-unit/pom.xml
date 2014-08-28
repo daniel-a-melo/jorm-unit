@@ -9,7 +9,7 @@
 
   <name>${project.groupId}:${project.artifactId}</name>
   <description>JUnit extension to assist out-of-server automated JPA testing</description>
-  <url>http://daniel-a-melo.github.io/jorm-unit</url>
+  <url>http://www.jorm-unit.org</url>
   
   <developers>
     <developer>
