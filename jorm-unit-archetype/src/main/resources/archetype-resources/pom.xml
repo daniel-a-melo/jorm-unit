@@ -32,7 +32,7 @@
     <dependency>
     	<groupId>org.jorm-unit</groupId>
     	<artifactId>jorm-unit</artifactId>
-     	<version>0.0.1-SNAPSHOT</version>
+     	<version>1.0.0</version>
      	<exclusions>
      	    <exclusion>
       			<groupId>org.eclipse.persistence</groupId>
